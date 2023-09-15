@@ -46,4 +46,9 @@ public class UserService {
         return user.getIdx();
     }
 
+    @Transactional
+    public Boolean logoutUser(String key) {
+       return refreshTokenRepository.deleteToken(key);
+    }
+
 }

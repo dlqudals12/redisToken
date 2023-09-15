@@ -4,13 +4,17 @@ import com.practiceProject.dto.request.user.LoginUser;
 import com.practiceProject.dto.request.user.SaveUser;
 import com.practiceProject.dto.response.DefaultResponse;
 import com.practiceProject.exception.NoMatchesException;
+import com.practiceProject.exception.NoneException;
+import com.practiceProject.exception.RefreshException;
 import com.practiceProject.exception.UserException;
 import com.practiceProject.security.JwtTokenProvider;
+import com.practiceProject.security.model.CustomDetails;
 import com.practiceProject.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +56,43 @@ public class UserController {
         cookie.setPath("/");
 
         response.addCookie(cookie);
+
+        return new DefaultResponse();
+    }
+
+    @PostMapping("/logout_user")
+    public DefaultResponse logoutUser(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        String ipValue = "";
+        Cookie[] cookies = request.getCookies();
+
+        for (Cookie cookie : cookies) {
+            if(cookie.getName().equals("userIp")) {
+                ipValue = cookie.getValue();
+            }
+        }
+
+        if(ipValue.isEmpty()) {
+            throw new NoMatchesException("쿠키가");
+        }
+
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+
+        Boolean delete = userService.logoutUser(ipValue + "-" + details.getIdx());
+
+        if(!delete) {
+            throw new RefreshException();
+        }
+
+        Cookie accessToken = new Cookie("accessToken", null);
+        accessToken.setMaxAge(0);
+        accessToken.setPath("/");
+
+        Cookie userIp = new Cookie("userIp", null);
+        userIp.setMaxAge(0);
+        userIp.setPath("/");
+
+        response.addCookie(accessToken);
+        response.addCookie(userIp);
 
         return new DefaultResponse();
     }

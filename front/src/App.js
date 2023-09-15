@@ -24,7 +24,6 @@ function App() {
       }
   }, []);
 
-  console.log( moment().add(100, 'years').format("YYYY-MM-DD"))
 
   return (
     <>

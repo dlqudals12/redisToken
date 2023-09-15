@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {useCookies} from "react-cookie";
 
 export const LoginUser = () => {
   const apiUrl = process.env.PUBLIC_URL;
@@ -10,8 +11,15 @@ export const LoginUser = () => {
     loginId: "",
     password: "",
   });
+  const [cookies, setCookies, removeCookies] = useCookies("accessToken");
 
-  const onClickSaveUser = () => {
+  useEffect(() => {
+      if(cookies.accessToken) {
+          navigate(apiUrl + "/checkUser");
+      }
+  }, []);
+
+  const onClickLoginUser = () => {
     axios
       .post(apiUrl + "/user/api/login_user", inputData)
       .then((res) => {
@@ -44,7 +52,7 @@ export const LoginUser = () => {
           }}
           style={{ width: "150px", height: "20px" }}
         />
-        <button onClick={onClickSaveUser}>등록</button>
+        <button onClick={onClickLoginUser}>등록</button>
       </div>
         <div>
             <button onClick={() => navigate(apiUrl + "/saveUser")}>회원가입</button>

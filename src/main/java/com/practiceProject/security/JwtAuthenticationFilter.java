@@ -36,7 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // 토큰 검사할 url 목록
     private final String[] urls = {
-            "/check/api/check_user"
+            "/check/api/check_user",
+            "/user/api/logout_user"
     };
 
     private final UserRepository userRepository;
@@ -50,8 +51,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (checkTokenPass(url)) {
             try {
                 String jwt = JwtTokenProvider.getJwtFromRequest(request); // request에서 jwt 토큰을 꺼낸다.
-
-                System.out.println(jwt);
 
                 if(jwt == null) {
                     response.sendError(400, new UserException("이미 삭제되거나 없는").getMsg());

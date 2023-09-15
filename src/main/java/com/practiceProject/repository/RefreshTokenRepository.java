@@ -25,15 +25,16 @@ public class RefreshTokenRepository {
         redisTemplate.expire(refreshToken.getRefreshToken(), 60 * 60 * 24 , TimeUnit.SECONDS);
     }
 
-    public Boolean findById(String idx) {
+    public Boolean findById(String key) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String refreshToken = valueOperations.get(idx);
-
-        System.out.println(refreshToken);
+        String refreshToken = valueOperations.get(key);
 
         boolean b = JwtTokenProvider.validateToken(refreshToken);
 
-
         return Objects.isNull(refreshToken) || !b;
+    }
+
+    public Boolean deleteToken(String key) {
+        return redisTemplate.delete(key);
     }
 }
