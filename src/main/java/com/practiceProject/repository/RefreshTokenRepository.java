@@ -1,7 +1,6 @@
 package com.practiceProject.repository;
 
 
-import com.practiceProject.exception.RefreshException;
 import com.practiceProject.redis.RefreshToken;
 import com.practiceProject.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -23,7 +21,7 @@ public class RefreshTokenRepository {
 
     public void save(RefreshToken refreshToken) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set( refreshToken.getUserIdx().toString(), refreshToken.getRefreshToken());
+        valueOperations.set( refreshToken.getUserKey(), refreshToken.getRefreshToken());
         redisTemplate.expire(refreshToken.getRefreshToken(), 60 * 60 * 24 , TimeUnit.SECONDS);
     }
 

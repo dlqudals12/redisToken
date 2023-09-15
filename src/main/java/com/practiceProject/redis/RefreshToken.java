@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 public class RefreshToken {
 
-    private Long userIdx;
+    private String userKey;
 
     @Id
     private String refreshToken;
 
-    public RefreshToken( String refreshToken, Long userIdx) {
-        this.userIdx = userIdx;
+    public RefreshToken( String refreshToken, String userKey) {
+        this.userKey = userKey;
         this.refreshToken = refreshToken;
     }
 }

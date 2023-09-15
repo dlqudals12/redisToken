@@ -32,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long loginUser(LoginUser loginUser) {
+    public Long loginUser(LoginUser loginUser, String ipValue) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         User user = userRepository.findUserByLoginId(loginUser.getLoginId()).orElseThrow(() -> new NoneException("유저가"));
@@ -41,7 +41,7 @@ public class UserService {
             throw new NoMatchesException("비밀번호가");
         }
 
-        refreshTokenRepository.save(new RefreshToken(JwtTokenProvider.generateToken(user.getIdx(), JwtTokenProvider.TokenType.REFRESH), user.getIdx()));
+        refreshTokenRepository.save(new RefreshToken(JwtTokenProvider.generateToken(user.getIdx(), JwtTokenProvider.TokenType.REFRESH), ipValue + "-" + user.getIdx()));
 
         return user.getIdx();
     }

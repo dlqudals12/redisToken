@@ -16,7 +16,7 @@ import java.security.Permission;
 @ToString
 public class User extends BaseEntity{
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_idx")
     private Long idx;
 

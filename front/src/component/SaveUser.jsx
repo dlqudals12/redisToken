@@ -17,7 +17,7 @@ export const SaveUser = () => {
       .post(apiUrl + "/user/api/save_user", inputData)
       .then((res) => {
         if (res.data.code === "0000") {
-          navigate(apiUrl + "/loginUser");
+          navigate(apiUrl + "/");
         } else {
           alert("오류");
         }
@@ -31,28 +31,32 @@ export const SaveUser = () => {
     <>
       <div>유저 등록</div>
       <div>
+          <label>로그인 Id</label>
         <input
           value={inputData.loginId}
           onChange={(e) => {
             setInputData({ ...inputData, loginId: e.target.value });
           }}
-          style={{ width: "150px", height: "20px" }}
+          style={{ width: "150px", height: "20px", marginLeft: '20px' }}
         />
         <br />
+          <label>비밀번호</label>
         <input
           value={inputData.password}
+          type={'password'}
           onChange={(e) => {
             setInputData({ ...inputData, password: e.target.value });
           }}
-          style={{ width: "150px", height: "20px" }}
+          style={{ width: "150px", height: "20px", marginLeft: '20px' }}
         />
         <br />
+          <label>이름</label>
         <input
           value={inputData.name}
           onChange={(e) => {
             setInputData({ ...inputData, name: e.target.value });
           }}
-          style={{ width: "150px", height: "20px" }}
+          style={{ width: "150px", height: "20px", marginLeft: '20px' }}
         />
         <br />
         <button onClick={onClickSaveUser}>등록</button>

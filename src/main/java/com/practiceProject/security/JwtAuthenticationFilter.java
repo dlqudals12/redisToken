@@ -66,18 +66,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                if (!ObjectUtils.isEmpty(jwt) && JwtTokenProvider.validateToken(jwt)) {
+                if (ObjectUtils.isEmpty(jwt) || !JwtTokenProvider.validateToken(jwt)) {
 
-                    List<GrantedAuthority> auth = new ArrayList<>();
-                    auth.add(new SimpleGrantedAuthority("ROLE_USER"));
+                    String ipValue = "";
+                    Cookie[] cookies = request.getCookies();
 
-                    UserAuthentication authentication = new UserAuthentication(user.getLoginId(), null, auth); // id를 인증한다.
-                    CustomDetails userDetails = new CustomDetails(user.getIdx(), user.getLoginId(), user.getName());
-                    authentication.setDetails(userDetails);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
+                    for (Cookie cookie : cookies) {
+                        if(cookie.getName().equals("userIp")) {
+                            ipValue = cookie.getValue();
+                        }
+                    }
 
-                    if(refreshTokenRepository.findById(user.getIdx().toString())) {
+                    if(refreshTokenRepository.findById(ipValue + "-" + user.getIdx())) {
                         response.sendError(400, new UserException("이미 삭제되거나 없는").getMsg());
                     }
 
@@ -87,7 +87,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     response.addCookie(cookie);
 
+                    System.out.println("Change-Token");
                 }
+
+                saveCustomDetails(user);
             } catch (Exception ex) {
                 logger.error("Could not set user authentication in security context", ex);
             }
@@ -101,6 +104,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             result = result || url.contains(urls[i]);
 
         return result;
+    }
+
+    private void saveCustomDetails(User user) {
+        List<GrantedAuthority> auth = new ArrayList<>();
+        auth.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        UserAuthentication authentication = new UserAuthentication(user.getLoginId(), null, auth); // id를 인증한다.
+        CustomDetails userDetails = new CustomDetails(user.getIdx(), user.getLoginId(), user.getName());
+        authentication.setDetails(userDetails);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

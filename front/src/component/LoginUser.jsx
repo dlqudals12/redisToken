@@ -46,6 +46,9 @@ export const LoginUser = () => {
         />
         <button onClick={onClickSaveUser}>등록</button>
       </div>
+        <div>
+            <button onClick={() => navigate(apiUrl + "/saveUser")}>회원가입</button>
+        </div>
     </>
   );
 };

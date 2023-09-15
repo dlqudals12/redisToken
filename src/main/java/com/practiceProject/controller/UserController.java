@@ -8,6 +8,7 @@ import com.practiceProject.exception.UserException;
 import com.practiceProject.security.JwtTokenProvider;
 import com.practiceProject.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +32,21 @@ public class UserController {
     }
 
     @PostMapping("/login_user")
-    public DefaultResponse loginUser(@RequestBody LoginUser loginUser, HttpServletResponse response) {
-        Long idx = userService.loginUser(loginUser);
+    public DefaultResponse loginUser(@RequestBody LoginUser loginUser, HttpServletRequest request, HttpServletResponse response) {
+        String ipValue = "";
+        Cookie[] cookies = request.getCookies();
 
+        for (Cookie cookie : cookies) {
+            if(cookie.getName().equals("userIp")) {
+                ipValue = cookie.getValue();
+            }
+        }
+
+        if(ipValue.isEmpty()) {
+            throw new NoMatchesException("쿠키가");
+        }
+
+        Long idx = userService.loginUser(loginUser, ipValue);
         Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(idx, JwtTokenProvider.TokenType.ACCESS));
         cookie.setMaxAge(60*60*24);
         cookie.setPath("/");

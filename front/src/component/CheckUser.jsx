@@ -12,7 +12,7 @@ export const CheckUser = () => {
     axios
       .get(apiUrl + "/check/api/check_user")
       .then((res) => {
-        console.log(res);
+        console.log(res.data.result);
       })
       .catch((e) => {
         console.log(e);
