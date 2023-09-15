@@ -29,4 +29,4 @@ npm i
 npm start
 ```
 
-<h2>4. </h2>
+<h2>4. Sequence Diagram</h2>
