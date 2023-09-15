@@ -30,3 +30,11 @@ npm start
 ```
 
 <h2>4. Sequence Diagram</h2>
+
+- 로그인 Sequence
+
+![Redis_Login drawio](https://github.com/dlqudals12/redisToken/assets/22268579/0d0ea616-7e54-49a4-b927-4f3db4fe1b90)
+
+- 로그인 이후 Token Filter
+
+
