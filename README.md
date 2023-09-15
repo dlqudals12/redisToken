@@ -38,3 +38,9 @@ npm start
 - 로그인 이후 Token Filter
 
 ![Token_Filter drawio](https://github.com/dlqudals12/redisToken/assets/22268579/26ce631c-c30f-4934-a814-5ce89e8c2699)
+
+<h2>영상</h2>
+
+![React App - Chrome 2023-09-16 02-31-52](https://github.com/dlqudals12/redisToken/assets/22268579/04116c56-c2a6-4784-8830-a9fd2ebaad04)
+
+
