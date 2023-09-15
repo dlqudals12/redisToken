@@ -37,7 +37,7 @@ npm start
 
 - 로그인 이후 Token Filter
 
-![Token_Filter drawio](https://github.com/dlqudals12/redisToken/assets/22268579/26ce631c-c30f-4934-a814-5ce89e8c2699)
+![TokenFilter drawio](https://github.com/dlqudals12/redisToken/assets/22268579/60a738c4-8242-4ac9-ade1-6347f6f9f3d3)
 
 <h2>영상</h2>
 
