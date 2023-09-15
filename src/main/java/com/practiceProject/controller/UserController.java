@@ -87,12 +87,7 @@ public class UserController {
         accessToken.setMaxAge(0);
         accessToken.setPath("/");
 
-        Cookie userIp = new Cookie("userIp", null);
-        userIp.setMaxAge(0);
-        userIp.setPath("/");
-
         response.addCookie(accessToken);
-        response.addCookie(userIp);
 
         return new DefaultResponse();
     }
