@@ -65,28 +65,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
+                String ipValue = "";
+                Cookie[] cookies = request.getCookies();
+
+                for (Cookie cookie : cookies) {
+                    if(cookie.getName().equals("userIp")) {
+                        ipValue = cookie.getValue();
+                    }
+                }
+
+                if(refreshTokenRepository.findById(ipValue + "-" + user.getIdx())) {
+                    response.sendError(400, new UserException("이미 삭제되거나 없는").getMsg());
+                }
+
                 if (ObjectUtils.isEmpty(jwt) || !JwtTokenProvider.validateToken(jwt)) {
-
-                    String ipValue = "";
-                    Cookie[] cookies = request.getCookies();
-
-                    for (Cookie cookie : cookies) {
-                        if(cookie.getName().equals("userIp")) {
-                            ipValue = cookie.getValue();
-                        }
-                    }
-
-                    if(refreshTokenRepository.findById(ipValue + "-" + user.getIdx())) {
-                        response.sendError(400, new UserException("이미 삭제되거나 없는").getMsg());
-                    }
-
                     Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(userIdx, JwtTokenProvider.TokenType.ACCESS));
                     cookie.setMaxAge(60*60*24);
                     cookie.setPath("/");
 
                     response.addCookie(cookie);
-
-                    System.out.println("Change-Token");
                 }
 
                 saveCustomDetails(user);
