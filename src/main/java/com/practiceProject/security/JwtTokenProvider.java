@@ -25,8 +25,6 @@ public class JwtTokenProvider {
         REFRESH, ACCESS
     }
 
-    ;
-
     // jwt 토큰 생성
     public static String generateToken(CustomDetails user, TokenType tokenType) {
 
