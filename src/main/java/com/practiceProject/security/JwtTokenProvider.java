@@ -1,15 +1,14 @@
 package com.practiceProject.security;
 
+import com.practiceProject.entity.User;
+import com.practiceProject.security.model.CustomDetails;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class JwtTokenProvider {
@@ -29,23 +28,17 @@ public class JwtTokenProvider {
     ;
 
     // jwt 토큰 생성
-    public static String generateToken(Long idx, TokenType tokenType) {
+    public static String generateToken(CustomDetails user, TokenType tokenType) {
 
         Date now = new Date();
-        Date expiryDate;
-        switch (tokenType) {
-            case REFRESH:
-                expiryDate = new Date(now.getTime() + JWT_EXPIRATION_REFRESH);
-                break;
-            case ACCESS:
-                expiryDate = new Date(now.getTime() + JWT_EXPIRATION_ACCESS);
-                break;
-            default:
-                throw new UnsupportedJwtException("Token Type이 없습니다.");
-        }
+        Date expiryDate = switch (tokenType) {
+            case REFRESH -> new Date(now.getTime() + JWT_EXPIRATION_REFRESH);
+            case ACCESS -> new Date(now.getTime() + JWT_EXPIRATION_ACCESS);
+            default -> throw new UnsupportedJwtException("Token Type이 없습니다.");
+        };
 
-        Map claim = new HashMap();
-        claim.put("idx", idx);
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("user", user);
 
         return Jwts.builder()
                 .setClaims(claim) // 사용자

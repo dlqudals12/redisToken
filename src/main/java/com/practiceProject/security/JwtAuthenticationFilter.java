@@ -57,8 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                Long userIdx = Long.parseLong(JwtTokenProvider.getValueFromJWT(jwt, "idx") + ""); // jwt에서 사용자 idx를
-                User user = userRepository.findUserByIdx(userIdx);
+                CustomDetails user = (CustomDetails) JwtTokenProvider.getValueFromJWT(jwt, "user"); // jwt에서 사용자 idx를
 
                 if (user == null) {
                     response.sendError(400, new UserException("이미 삭제되거나 없는").getMsg());
@@ -79,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 if (ObjectUtils.isEmpty(jwt) || !JwtTokenProvider.validateToken(jwt)) {
-                    Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(userIdx, JwtTokenProvider.TokenType.ACCESS));
+                    Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(user, JwtTokenProvider.TokenType.ACCESS));
                     cookie.setMaxAge(60*60*24);
                     cookie.setPath("/");
 
@@ -102,13 +101,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return result;
     }
 
-    private void saveCustomDetails(User user) {
+    private void saveCustomDetails(CustomDetails user) {
         List<GrantedAuthority> auth = new ArrayList<>();
         auth.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         UserAuthentication authentication = new UserAuthentication(user.getLoginId(), null, auth); // id를 인증한다.
-        CustomDetails userDetails = new CustomDetails(user.getIdx(), user.getLoginId(), user.getName());
-        authentication.setDetails(userDetails);
+        authentication.setDetails(user);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

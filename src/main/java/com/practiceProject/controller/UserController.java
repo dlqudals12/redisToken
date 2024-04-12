@@ -50,8 +50,8 @@ public class UserController {
             throw new NoMatchesException("쿠키가");
         }
 
-        Long idx = userService.loginUser(loginUser, ipValue);
-        Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(idx, JwtTokenProvider.TokenType.ACCESS));
+        CustomDetails customDetails = userService.loginUser(loginUser, ipValue);
+        Cookie cookie = new Cookie("accessToken", JwtTokenProvider.generateToken(customDetails, JwtTokenProvider.TokenType.ACCESS));
         cookie.setMaxAge(60*60*24);
         cookie.setPath("/");
 
